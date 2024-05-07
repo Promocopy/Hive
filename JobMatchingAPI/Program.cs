@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -14,7 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 //for entity framework
-var configuration = builder.Configuration;
 builder.Services.AddDbContext<JobContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
@@ -32,26 +32,30 @@ builder.Services.AddSwaggerGen();
 
 
 // for authentication
-builder.Services.AddAuthentication(option =>
+
+builder.Services.AddAuthentication(options =>
 {
-    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-  .AddJwtBearer(option =>
-  {
-      option.SaveToken = true;
-      option.RequireHttpsMetadata = false;
-      option.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-      {
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; 
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
+}).AddJwtBearer(options =>
+{
+
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
           ValidateAudience = true,
           ValidateIssuer = true,
           ValidAudience = builder.Configuration["JWT:ValidAudience"],
           ValidIssuer = builder.Configuration["JWT:ValidAudience"],
-          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
-      };
-  });
+          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("qdTuh99KIPI7VSqgTwzj71Ba7ETRGNhP"))
+    };
+});
 
+//todo later
+//IRoleStore<>
 
 
 var app = builder.Build();
@@ -64,7 +68,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
