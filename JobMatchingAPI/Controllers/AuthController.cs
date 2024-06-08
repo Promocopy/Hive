@@ -28,8 +28,7 @@ namespace JobMatchingAPI.Controllers
             _rolemanager = roleManager;
             _configuration = configuration;
         }
-
-
+        
         [HttpPost("register")]  //api/Auth/register
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {

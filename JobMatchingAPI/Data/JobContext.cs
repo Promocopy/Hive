@@ -10,17 +10,24 @@ namespace JobMatchingAPI.Data
         public JobContext(DbContextOptions options) : base(options)
         {
         }
-
-        private void SeedRole(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            builder.Entity<IdentityRole>().HasData
-                (
-                new IdentityRole() { Name = "Admin", ConcurrencyStamp = "1", NormalizedName = "Admin" },
-                new IdentityRole() { Name = "User", ConcurrencyStamp = "2", NormalizedName = "User" }
-                );
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Member>()
+                .HasKey(m => m.EMAIL);  // Configure primary key explicitly if needed
+            modelBuilder.Entity<MemberEducarionalHistory>()
+                .HasKey(m => m.DegreeClassification);
+            modelBuilder.Entity<MemberWorkHistory>()
+                .HasKey(m => m.Industry);
         }
 
         public DbSet<User> User { get; set; }
-
+        public DbSet<Member> Member { get; set; }
+        public DbSet<MemberEducarionalHistory> EHistories { get; set; }
+        public DbSet<MemberWorkHistory> WorkHistories { get; set; }
+        
     }
+
+
+
 }

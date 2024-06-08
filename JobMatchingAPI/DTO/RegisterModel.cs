@@ -4,7 +4,7 @@ namespace JobMatchingAPI.DTO
 {
     public class RegisterModel
     {
-        [Required(ErrorMessage="FirstName is required")]
+        [Required(ErrorMessage = "FirstName is required")]
         public string? FirstName { get; set; }
 
         [Required(ErrorMessage = "LastName is required")]
@@ -13,11 +13,10 @@ namespace JobMatchingAPI.DTO
         [RegularExpression(@"^0?[1-9][0-9]*$", ErrorMessage = "Invalid phone number format.")]
         public double PhoneNumber { get; set; }
 
-        [Required (ErrorMessage = "Password is required")]
+        [Required(ErrorMessage = "Password is required")]
         public string? Password { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
         public string? Email { get; set; }
-
     }
 }
